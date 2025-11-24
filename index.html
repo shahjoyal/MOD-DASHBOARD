@@ -15,6 +15,7 @@
       --page-max: 1400px;
       --radius: 14px;
       --shadow: 0 6px 18px rgba(18,38,63,0.08);
+      --grid-gap-top: 72px;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     *{box-sizing:border-box}
@@ -34,12 +35,12 @@
     .btn-logout{background:#e11d48;color:#fff;border:none;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
 
     /* GRID: 6 columns on wide screens, responsive downwards */
-    .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:12px}
+    .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:var(--grid-gap-top)}
 
     /* Card styling */
     .card-link{display:block;text-decoration:none;color:inherit}
     .card-link:hover{text-decoration:none}
-    .card{background:#5553d5;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;padding:14px;min-height:160px;display:flex;flex-direction:column;transition:box-shadow .18s ease}
+    .card{background:#5553d5;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;padding:14px;min-height:215px;display:flex;flex-direction:column;transition:box-shadow .18s ease}
     /* removed hover color/transform effect as requested: hover keeps same look */
     .card:hover{box-shadow:var(--shadow)}
 
@@ -52,7 +53,7 @@
     .info-row{display:flex;gap:10px;flex:1;align-items:stretch}
     .info{flex:1;border-radius:10px;padding:10px;background:linear-gradient(180deg,#fafafa,#ffffff);display:flex;flex-direction:column;justify-content:center;min-width:0}
     .info .label{font-size:12px;color:var(--muted);font-weight:600}
-    .info .value{font-size:18px;font-weight:800}
+    .info .value{font-size:16px;font-weight:800}
 
     /* Different accents for variety */
     .a1 .card-head::before{background:var(--accent1)}
