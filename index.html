@@ -84,17 +84,43 @@
     .card:hover{transform:translateY(-6px); box-shadow:0 18px 36px rgba(6,18,29,0.10)}
     .card-heading{font-size:14px;font-weight:800;margin:4px 0 12px;text-transform:uppercase;color:#072a2a;text-align:center}
 
-    .tiles{width:100%;display:flex;gap:10px;align-items:center;justify-content:center;flex:1 1 auto;padding:0 6px}
-    .tile{
-      flex: 1 1 var(--tile-min-width);
-      aspect-ratio: 3 / 2;
-      border-radius:10px;
-      border:2px solid rgba(6,18,29,0.8);
-      background:linear-gradient(180deg,#ffffff,#ccf547);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;
-      text-decoration:none;color:inherit;
-      transition: transform .10s ease, box-shadow .10s ease, border-color .10s ease;
-    }
+.tiles{
+  width:100%;
+  display:flex;
+  gap:10px;
+  align-items:stretch;            /* allow tiles to fill vertical space of the card */
+  justify-content:center;
+  flex:1 1 auto;
+  padding:0 6px;
+}
+
+/* change the height by editing the `--tile-fixed-height` value below */
+:root { --tile-fixed-height: 150px; } /* put this near your other variables if you prefer */
+
+.tile{
+  flex: 1 1 var(--tile-min-width);
+  /* remove aspect-ratio so height can be controlled */
+  /* aspect-ratio: 3 / 2; */        /* <-- comment out or remove this line if present */
+  border-radius:10px;
+  border:2px solid rgba(6,18,29,0.8);
+  background:linear-gradient(180deg,#ffffff,#ccf547);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:12px;
+  text-decoration:none;
+  color:inherit;
+  transition: transform .10s ease, box-shadow .10s ease, border-color .10s ease;
+
+  /* controlling tile height */
+  height: var(--tile-fixed-height);
+  max-height: var(--tile-fixed-height);
+  min-height: 0;
+  overflow: hidden;
+}
+
     .tile:active{transform:scale(.99)}
     .tile:hover{box-shadow:0 12px 28px rgba(6,18,29,.08);transform:translateY(-6px);border-color:var(--accent)}
     .tile .label{font-size:13px;color:var(--muted);margin-bottom:6px}
@@ -154,7 +180,7 @@
       </div>
 
       <div class="nav-actions">
-        <button class="btn ghost" id="helpBtn" aria-label="Help">Help</button>
+        <!-- <button class="btn ghost" id="helpBtn" aria-label="Help">Help</button> -->
         <button class="btn" id="loginBtn" aria-haspopup="dialog">Login</button>
       </div>
     </div>
