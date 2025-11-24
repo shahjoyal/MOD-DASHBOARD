@@ -17,11 +17,13 @@
       --shadow-lg: 0 18px 40px rgba(6,18,29,0.12);
       --shadow-sm: 0 8px 22px rgba(6,18,29,0.06);
 
-      
       --card-max-width: 400px;   
       --card-min-width: 260px;
-      --card-height: 360px;
+      --card-height: 330px;
       --tile-value-size: 16px;
+
+      /* new: tile minimum width so tiles become wider by default */
+      --tile-min-width: 180px;
     }
 
     *{box-sizing:border-box}
@@ -58,7 +60,7 @@
     .grid-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
     .controls{color:var(--muted)}
 
-   
+
     .grid-wrapper{display:flex;justify-content:center;width:100%}
     .cards-grid{
       display:grid;
@@ -89,8 +91,9 @@
     
     .tiles{width:100%;display:flex;gap:16px;align-items:center;justify-content:center;flex:1 1 auto;padding:0 6px}
     .tile{
-      flex:1 1 0;
-      aspect-ratio: 1 / 1;
+      /* increased width via larger flex-basis and wider aspect ratio */
+      flex: 1 1 var(--tile-min-width);
+      aspect-ratio: 3 / 2;
       border-radius:14px;
       border:3px solid rgba(6,18,29,0.9);
       background:linear-gradient(180deg,#ffffff,#f7fbfb);
@@ -110,26 +113,26 @@
     
     @media (max-width:1400px){
       .cards-grid{grid-template-columns: repeat(5, minmax(220px, 1fr)); max-width: calc(220px * 5 + 30px * 4)}
-      :root { --card-height: 340px; --tile-value-size: 19px; }
+      :root { --card-height: 340px; --tile-value-size: 19px; --tile-min-width: 180px; }
     }
     @media (max-width:1200px){
       .cards-grid{grid-template-columns: repeat(4, minmax(200px, 1fr)); max-width:1100px}
-      :root { --card-height: 320px; --tile-value-size: 18px; }
+      :root { --card-height: 320px; --tile-value-size: 18px; --tile-min-width: 160px; }
     }
     @media (max-width:980px){
       .cards-grid{grid-template-columns: repeat(3, minmax(160px, 1fr)); max-width:900px; gap:22px}
-      :root{ --card-height: 280px; --tile-value-size: 16px; }
+      :root{ --card-height: 280px; --tile-value-size: 16px; --tile-min-width: 140px; }
     }
     @media (max-width:700px){
       .cards-grid{grid-template-columns: repeat(2, minmax(140px, 1fr)); max-width:640px; gap:16px}
-      :root{ --card-height: 240px; --tile-value-size: 15px; }
+      :root{ --card-height: 240px; --tile-value-size: 15px; --tile-min-width: 120px; }
       .logo{width:52px;height:52px}
     }
     @media (max-width:420px){
       .cards-grid{grid-template-columns:repeat(1,1fr);max-width:380px;gap:12px}
       .card{padding:14px;min-height:200px}
       .tile{padding:12px}
-      :root{ --card-height: 200px; --tile-value-size: 15px; }
+      :root{ --card-height: 200px; --tile-value-size: 15px; --tile-min-width: 100px; }
     }
 
     
@@ -176,12 +179,12 @@
         <article class="card" aria-label="BSL-3">
           <div class="card-heading">BSL-3</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=BSL-3&type=approved" title="Open Approved MOD for BSL-3">
+            <a class="tile approved" href="MOD-DASHBOARD.html" title="Open Approved MOD for BSL-3">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=BSL-3&type=current" title="Open Current MOD for BSL-3">
+            <a class="tile current" href="MOD-DASHBOARD.html" title="Open Current MOD for BSL-3">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -192,12 +195,12 @@
         <article class="card" aria-label="CSTPS-3-7">
           <div class="card-heading">CSTPS-3-7</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=CSTPS-3-7&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=CSTPS-3-7&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -208,12 +211,12 @@
         <article class="card" aria-label="KPKD-1-4">
           <div class="card-heading">KPKD-1-4</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=KPKD-1-4&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=KPKD-1-4&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -224,12 +227,12 @@
         <article class="card" aria-label="KTPS-6,8">
           <div class="card-heading">KTPS-6,8</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=KTPS-6,8&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=KTPS-6,8&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -240,12 +243,12 @@
         <article class="card" aria-label="NTPS-3-5">
           <div class="card-heading">NTPS-3-5</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=NTPS-3-5&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=NTPS-3-5&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -256,12 +259,12 @@
         <article class="card" aria-label="PARALI_TPS_6-8">
           <div class="card-heading">PARALI_TPS_6-8</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=PARALI_TPS_6-8&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=PARALI_TPS_6-8&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -273,12 +276,12 @@
         <article class="card" aria-label="BSL_4">
           <div class="card-heading">BSL_4</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=BSL_4&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=BSL_4&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -289,12 +292,12 @@
         <article class="card" aria-label="CSTPS-8-9">
           <div class="card-heading">CSTPS-8-9</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=CSTPS-8-9&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=CSTPS-8-9&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -305,12 +308,12 @@
         <article class="card" aria-label="KPKD-5">
           <div class="card-heading">KPKD-5</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=KPKD-5&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=KPKD-5&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
@@ -337,12 +340,12 @@
         <article class="card" aria-label="PARAS-TPS-3-4">
           <div class="card-heading">PARAS-TPS-3-4</div>
           <div class="tiles">
-            <a class="tile approved" href="/mnt/data/MOD-DASHBOARD.html?plant=PARAS-TPS-3-4&type=approved">
+            <a class="tile approved" href="MOD-DASHBOARD.html">
               <div class="label">Approved MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
             </a>
-            <a class="tile current" href="/mnt/data/MOD-DASHBOARD.html?plant=PARAS-TPS-3-4&type=current">
+            <a class="tile current" href="MOD-DASHBOARD.html">
               <div class="label">Current MOD</div>
               <div class="value">₹ 2.3002 / kWh</div>
               <div class="note">open dashboard</div>
