@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily MOD – Variable Charge Dashboard</title>
+  <style>
+    :root{
+      --bg:#f7fafc;          /* pastel background */
+      --card:#ffffff;         /* cards */
+      --accent:#6ee7b7;       /* mint */
+      --accent-2:#93c5fd;     /* sky */
+      --accent-3:#fde68a;     /* amber */
+      --text:#0f172a;         /* slate-900 */
+      --muted:#475569;        /* slightly darker for contrast */
+      --danger:#ef4444;       /* red-500 */
+      --ok:#10b981;           /* green-500 */
+      --warn:#f59e0b;         /* amber-500 */
+      --shadow:0 10px 18px rgba(2,8,23,.06), 0 2px 4px rgba(2,8,23,.06);
+      --radius:18px;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";}
+    .container{max-width:1200px;margin:32px auto;padding:0 16px;}
+    .title{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .title h1{font-size:clamp(22px, 2.5vw, 32px);margin:0;letter-spacing:.3px}
+    .sub{color:var(--muted);font-size:14px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:18px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .span-4{grid-column:span 12}
+    .span-8{grid-column:span 12}
+    .span-12{grid-column:span 12}
+    @media(min-width:980px){
+      .span-4{grid-column:span 4}
+      .span-8{grid-column:span 8}
+    }
+    .card h2{margin:0 0 8px 0;font-size:18px}
+
+    /* INPUT GROUP ALIGNMENT */
+    .group{display:grid;grid-template-columns:minmax(140px,1fr) minmax(120px,220px) 70px;gap:10px;align-items:center;margin:10px 0}
+    .unit{color:var(--muted);font-size:12px;text-align:right}
+    label{font-size:14px;color:var(--text)}
+    input[type="number"]{width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;font-size:14px;background:#fbfdff}
+    input[type="number"]:focus{outline:none;border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.25)}
+
+    .help{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:8px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,var(--accent-2),var(--accent));box-shadow:var(--shadow);color:#0b1220;font-weight:600}
+    .result-card{background:linear-gradient(135deg, #e0f2fe, #ecfeff);}    
+    .big{font-size:clamp(22px,3vw,34px);font-weight:800;letter-spacing:.2px}
+    .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .kpi .k{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px}
+    .kpi .label{font-size:12px;color:var(--muted)}
+    .kpi .value{font-size:16px;font-weight:700}
+
+    .warn{padding:10px 12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13px;display:flex;gap:10px;align-items:flex-start;margin-top:8px}
+    .error{padding:10px 12px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d;font-size:13px;display:flex;gap:10px;align-items:flex-start;margin-top:8px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    button{border:none;border-radius:12px;padding:10px 14px;background:#0ea5e9;color:white;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+    button.secondary{background:#10b981}
+    .muted{color:var(--muted)}
+
+    /* TABS */
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .tab{padding:8px 12px;border-radius:10px;background:#e5f2ff;border:1px solid #cfe3ff;color:#073b65;cursor:pointer;font-weight:600}
+    .tab[aria-selected="true"]{background:#073b65;color:white;border-color:#073b65}
+    .tabpanel{display:none}
+    .tabpanel.active{display:block}
+    .section-title{margin-top:6px;font-size:13px;color:#334155;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+    /* Sticky inputs column for visibility */
+    .sticky{position:sticky;top:16px;align-self:start}
+
+    .footer{margin-top:20px;font-size:12px;color:var(--muted);text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">
+      <h1>Daily MOD – Variable Charge Dashboard</h1>
+      <div class="pill" title="Final output is the Variable Charge">Final Output: Variable Charge</div>
+    </div>
+    <div class="sub">Enter inputs on the left. Results update automatically. Blend must equal 100% (Imported ≤ 30%).</div>
+
+    <div class="grid">
+      <!-- INPUTS COLUMN -->
+      <div class="card span-4 sticky" id="inputs">
+        <h2>Inputs</h2>
+        <div class="tabs" role="tablist" aria-label="Input sections">
+          <button class="tab" role="tab" aria-selected="true" aria-controls="tab-gen" id="tabbtn-gen">Generation</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-blend" id="tabbtn-blend">Blend</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-gcv" id="tabbtn-gcv">GCV</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-cost" id="tabbtn-cost">Cost</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-hr" id="tabbtn-hr">HeatRate & Freight</button>
+        </div>
+
+        <div id="tab-gen" class="tabpanel active" role="tabpanel" aria-labelledby="tabbtn-gen">
+          <div class="section-title">Generation</div>
+          <div class="group"><label for="gross">Gross Generation</label><input id="gross" type="number" inputmode="decimal" step="0.01" value="10" min="0"><div class="unit">MUs</div></div>
+          <div class="group"><label for="apc">APC (Aux Consumption)</label><input id="apc" type="number" inputmode="decimal" step="0.01" value="8" min="0" max="100"><div class="unit">%</div></div>
+          <div class="help">Net Generation is calculated automatically.</div>
+        </div>
+
+        <div id="tab-blend" class="tabpanel" role="tabpanel" aria-labelledby="tabbtn-blend">
+          <div class="section-title">Coal Blend (%)</div>
+          <div class="group"><label for="p_raw">Raw</label><input id="p_raw" type="number" step="0.1" value="40" min="0" max="100"><div class="unit">%</div></div>
+          <div class="group"><label for="p_wash">Washed</label><input id="p_wash" type="number" step="0.1" value="40" min="0" max="100"><div class="unit">%</div></div>
+          <div class="group"><label for="p_imp">Imported</label><input id="p_imp" type="number" step="0.1" value="20" min="0" max="30"><div class="unit">%</div></div>
+          <div id="blendMsg" class="help">Blend must sum to 100%.</div>
+        </div>
+
+        <div id="tab-gcv" class="tabpanel" role="tabpanel" aria-labelledby="tabbtn-gcv">
+          <div class="section-title">GCV (kcal/kg)</div>
+          <div class="group"><label for="gcv_raw">Raw</label><input id="gcv_raw" type="number" step="1" value="3500" min="0"><div class="unit">kcal/kg</div></div>
+          <div class="group"><label for="gcv_wash">Washed</label><input id="gcv_wash" type="number" step="1" value="4200" min="0"><div class="unit">kcal/kg</div></div>
+          <div class="group"><label for="gcv_imp">Imported</label><input id="gcv_imp" type="number" step="1" value="5200" min="0"><div class="unit">kcal/kg</div></div>
+        </div>
+
+        <div id="tab-cost" class="tabpanel" role="tabpanel" aria-labelledby="tabbtn-cost">
+          <div class="section-title">Coal Cost (₹/ton)</div>
+          <div class="group"><label for="c_raw">Raw</label><input id="c_raw" type="number" step="1" value="1800" min="0"><div class="unit">₹/t</div></div>
+          <div class="group"><label for="c_wash">Washed</label><input id="c_wash" type="number" step="1" value="2600" min="0"><div class="unit">₹/t</div></div>
+          <div class="group"><label for="c_imp">Imported</label><input id="c_imp" type="number" step="1" value="5000" min="0"><div class="unit">₹/t</div></div>
+        </div>
+
+        <div id="tab-hr" class="tabpanel" role="tabpanel" aria-labelledby="tabbtn-hr">
+          <div class="section-title">Heat Rate & Freight</div>
+          <div class="group"><label for="hr">Boiler / Plant Heat Rate</label><input id="hr" type="number" step="1" value="2350" min="0"><div class="unit">kcal/kWh</div></div>
+          <div class="group"><label for="freight">Freight Rate</label><input id="freight" type="number" step="1" value="800" min="0"><div class="unit">₹/ton</div></div>
+          <div class="group"><label for="handling">Handling Charges</label><input id="handling" type="number" step="1" value="150" min="0"><div class="unit">₹/ton</div></div>
+          <div class="actions">
+            <button id="reset">Reset</button>
+            <button id="example" class="secondary">Load Example</button>
+          </div>
+          <div class="help">Imported coal default cap ≤ 30% (editable in code).</div>
+          <div id="validation"></div>
+        </div>
+      </div>
+
+      <!-- RESULTS COLUMN -->
+      <div class="card span-8 result-card">
+        <h2>Results</h2>
+        <div class="kpi">
+          <div class="k"><div class="label">Net Generation</div><div class="value" id="netGen">–</div></div>
+          <div class="k"><div class="label">Blended GCV</div><div class="value" id="blendGcv">–</div></div>
+          <div class="k"><div class="label">Blended Cost (excl. F&H)</div><div class="value" id="blendCost">–</div></div>
+          <div class="k"><div class="label">Landed Cost (incl. F&H)</div><div class="value" id="landedCost">–</div></div>
+          <div class="k"><div class="label">Specific Coal Consumption</div><div class="value" id="scc">–</div></div>
+          <div class="k"><div class="label">Total Coal Required</div><div class="value" id="coalReq">–</div></div>
+        </div>
+        <div style="margin-top:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg, #fef9c3, #fde68a);border:1px solid #fcd34d">
+          <div class="muted" style="font-size:12px;">Final Output</div>
+          <div class="big" id="varCharge">Variable Charge: –</div>
+        </div>
+        <div class="help">Formulas:
+          <ul>
+            <li>Blended GCV = Σ(Blend% × GCV)/100</li>
+            <li>Blended Cost = Σ(Blend% × Cost)/100</li>
+            <li>Landed Cost = Blended Cost + Freight + Handling</li>
+            <li>Specific Coal Consumption = Heat Rate / Blended GCV (kg/kWh)</li>
+            <li>Total Coal Required (tons) = Gross MUs × 10⁶ × SCC / 1000</li>
+            <li>Variable Charge (₹/kWh) = Total Fuel Cost / (Net MUs × 10⁶)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>Notes</h2>
+        <div class="help">• If your Excel workbook has slightly different parameter names (e.g., Plant vs Boiler Heat Rate), just align inputs accordingly. • You can raise the imported coal cap in the code if your policy allows &gt; 30%.</div>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Variable Charge Calculator • Pastel UI • All values in SI/metric • Currency: INR</div>
+  </div>
+
+  <script>
+    // Helper: safe number
+    const N = (id)=>{
+      const v = parseFloat(document.getElementById(id).value);
+      return isFinite(v) ? v : 0;
+    }
+    const fmt = (x, d=2)=>{
+      if (!isFinite(x)) return '–';
+      return Number(x).toLocaleString(undefined,{maximumFractionDigits:d, minimumFractionDigits:d});
+    }
+
+    // Main compute
+    function compute(){
+      const gross = N('gross');
+      const apc = Math.min(Math.max(N('apc'),0),100);
+
+      const pRaw = N('p_raw');
+      const pWash = N('p_wash');
+      const pImp = N('p_imp');
+
+      const gcvRaw = N('gcv_raw');
+      const gcvWash = N('gcv_wash');
+      const gcvImp = N('gcv_imp');
+
+      const cRaw = N('c_raw');
+      const cWash = N('c_wash');
+      const cImp = N('c_imp');
+
+      const hr = N('hr');
+      const freight = N('freight');
+      const handling = N('handling');
+
+      const blendSum = pRaw + pWash + pImp;
+      const validation = document.getElementById('validation');
+      validation.innerHTML = '';
+
+      // Messages
+      let messages = [];
+      if (Math.abs(blendSum - 100) > 0.001){
+        messages.push(`<div class="warn">Blend must equal 100% (current: ${fmt(blendSum,1)}%).</div>`);
+      }
+      if (pImp > 30){
+        messages.push(`<div class="warn">Imported coal &gt; 30%. Adjust if policy capped at 30%.</div>`);
+      }
+      document.getElementById('blendMsg').textContent = `Blend must sum to 100% (current: ${fmt(blendSum,1)}%).`;
+      validation.innerHTML = messages.join('');
+
+      // Derived
+      const net = gross * (1 - apc/100);
+      const blendGcv = (pRaw*gcvRaw + pWash*gcvWash + pImp*gcvImp) / 100;
+      const blendCost = (pRaw*cRaw + pWash*cWash + pImp*cImp) / 100;
+      const landedCost = blendCost + freight + handling; // ₹/ton
+
+      const scc = (blendGcv>0 && hr>0) ? (hr / blendGcv) : NaN; // kg/kWh
+      const coalReqTons = isFinite(scc) ? (gross * 1e6 * scc / 1000) : NaN; // tons
+      const fuelCost = isFinite(coalReqTons) ? coalReqTons * landedCost : NaN; // ₹
+      const varCharge = (net>0 && isFinite(fuelCost)) ? (fuelCost / (net * 1e6)) : NaN; // ₹/kWh
+
+      // Update UI
+      document.getElementById('netGen').textContent = `${fmt(net,3)} MUs`;
+      document.getElementById('blendGcv').textContent = `${fmt(blendGcv,0)} kcal/kg`;
+      document.getElementById('blendCost').textContent = `₹ ${fmt(blendCost,0)} / ton`;
+      document.getElementById('landedCost').textContent = `₹ ${fmt(landedCost,0)} / ton`;
+      document.getElementById('scc').textContent = `${fmt(scc,4)} kg/kWh`;
+      document.getElementById('coalReq').textContent = `${fmt(coalReqTons,0)} tons`;
+
+      const vcEl = document.getElementById('varCharge');
+      vcEl.textContent = `Variable Charge: ${isFinite(varCharge) ? `₹ ${fmt(varCharge,4)} / kWh` : '–'}`;
+
+      // Visual emphasis if invalid
+      vcEl.parentElement.style.opacity = (Math.abs(blendSum-100)>0.001) ? .6 : 1;
+    }
+
+    // Wire inputs (tab panels + inputs)
+    const ids = ['gross','apc','p_raw','p_wash','p_imp','gcv_raw','gcv_wash','gcv_imp','c_raw','c_wash','c_imp','hr','freight','handling'];
+    ids.forEach(id=> document.getElementById(id).addEventListener('input', compute));
+
+    // Tabs logic for better visibility
+    const tabButtons = [
+      {btn:'tabbtn-gen', panel:'tab-gen'},
+      {btn:'tabbtn-blend', panel:'tab-blend'},
+      {btn:'tabbtn-gcv', panel:'tab-gcv'},
+      {btn:'tabbtn-cost', panel:'tab-cost'},
+      {btn:'tabbtn-hr', panel:'tab-hr'}
+    ];
+    tabButtons.forEach(({btn,panel})=>{
+      document.getElementById(btn).addEventListener('click', ()=>{
+        tabButtons.forEach(({btn: b2, panel: p2})=>{
+          document.getElementById(b2).setAttribute('aria-selected','false');
+          document.getElementById(p2).classList.remove('active');
+        });
+        document.getElementById(btn).setAttribute('aria-selected','true');
+        document.getElementById(panel).classList.add('active');
+      });
+    });
+
+    // Buttons
+    document.getElementById('reset').addEventListener('click', ()=>{
+      document.getElementById('gross').value = 10;
+      document.getElementById('apc').value = 8;
+      document.getElementById('p_raw').value = 40;
+      document.getElementById('p_wash').value = 40;
+      document.getElementById('p_imp').value = 20;
+      document.getElementById('gcv_raw').value = 3500;
+      document.getElementById('gcv_wash').value = 4200;
+      document.getElementById('gcv_imp').value = 5200;
+      document.getElementById('c_raw').value = 1800;
+      document.getElementById('c_wash').value = 2600;
+      document.getElementById('c_imp').value = 5000;
+      document.getElementById('hr').value = 2350;
+      document.getElementById('freight').value = 800;
+      document.getElementById('handling').value = 150;
+      // keep active tab on reset
+      compute();
+    });
+
+    document.getElementById('example').addEventListener('click', ()=>{
+      document.getElementById('gross').value = 15.2;
+      document.getElementById('apc').value = 7.6;
+      document.getElementById('p_raw').value = 55;
+      document.getElementById('p_wash').value = 30;
+      document.getElementById('p_imp').value = 15;
+      document.getElementById('gcv_raw').value = 3600;
+      document.getElementById('gcv_wash').value = 4300;
+      document.getElementById('gcv_imp').value = 5600;
+      document.getElementById('c_raw').value = 2000;
+      document.getElementById('c_wash').value = 2750;
+      document.getElementById('c_imp').value = 5200;
+      document.getElementById('hr').value = 2320;
+      document.getElementById('freight').value = 900;
+      document.getElementById('handling').value = 160;
+      compute();
+    });
+
+    // Init
+    compute();
+  </script>
+</body>
+</html>
