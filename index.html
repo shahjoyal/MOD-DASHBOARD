@@ -3,440 +3,251 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DAILY MOD - DASHBOARD</title>
-<style>
-  :root{
-    --bg: #edf7f6;
-    --page-max: 1200px;
-    --muted: #556b6b;
-    --accent: #0f766e;
-    --accent-2: #06b6d4;
-    --border-dark: #062022;
-    --card-border: rgba(6,24,38,0.08);
-    --radius: 10px;
-    --shadow-lg: 0 10px 22px rgba(6,18,29,0.06);
-    --shadow-sm: 0 6px 12px rgba(6,18,29,0.04);
+  <title>MOD - DASHBOARD</title>
+  <style>
+    :root{
+      --bg: #f5faf9;
+      --card-bg: #ffffff;
+      --accent1: linear-gradient(135deg,#6dd3d7 0%,#4fb6c9 100%);
+      --accent2: linear-gradient(135deg,#ffd36b 0%,#ff9b6b 100%);
+      --accent3: linear-gradient(135deg,#c8a3ff 0%,#8ea1ff 100%);
+      --muted: #6b7280;
+      --page-max: 1400px;
+      --radius: 14px;
+      --shadow: 0 6px 18px rgba(18,38,63,0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#0f172a;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+    .container{width:100%;max-width:var(--page-max);padding:18px}
 
-    --card-max-width: 320px;
-    --card-min-width: 200px;
-    --card-height: 220px;
-    --tile-value-size: 14px;
-    --tile-min-width: 120px;
+    /* NAVBAR */
+    .navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:transparent}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .brand h1{font-size:18px;margin:0}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
 
-    --tile-fixed-height: 150px;
-  }
+    /* logout button */
+    .auth{display:flex;align-items:center;gap:10px}
+    .btn-logout{background:#e11d48;color:#fff;border:none;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
 
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    background: linear-gradient(180deg,#e7f5f5,#f3faf9);
-    color:var(--border-dark);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    -webkit-tap-highlight-color: transparent;
-    font-size:14px;
-  }
+    /* GRID: 6 columns on wide screens, responsive downwards */
+    .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:12px}
 
-  /* NAV */
-  .navbar{
-    width:100%;
-    background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
-    border-bottom:1px solid rgba(15,23,42,0.04);
-    padding:10px 14px;
-    position:sticky; top:0; z-index:40; backdrop-filter: blur(6px);
-    box-shadow: 0 1px 4px rgba(6,18,29,0.03);
-  }
-  .nav-inner{max-width:var(--page-max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .brand{display:flex;gap:10px;align-items:center}
-  .logo{
-    width:48px;height:48px;border-radius:10px;
-    background:linear-gradient(135deg,#034c49,#0ea5a4);
-    display:flex;align-items:center;justify-content:center;
-    color:white;font-weight:800;font-size:16px;box-shadow:var(--shadow-sm)
-  }
-  .brand h1{margin:0;font-size:16px}
-  .brand p{margin:0;font-size:12px;color:var(--muted)}
-  .nav-actions{display:flex;gap:8px;align-items:center}
-  .btn{
-    padding:8px 12px;border-radius:8px;border:none;
-    background:var(--accent);color:white;
-    font-weight:700;cursor:pointer;
-    box-shadow:var(--shadow-sm);font-size:13px
-  }
-  .btn.ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);color:var(--border-dark);font-weight:600}
+    /* Card styling */
+    .card-link{display:block;text-decoration:none;color:inherit}
+    .card-link:hover{text-decoration:none}
+    .card{background:#5553d5;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;padding:14px;min-height:160px;display:flex;flex-direction:column;transition:box-shadow .18s ease}
+    /* removed hover color/transform effect as requested: hover keeps same look */
+    .card:hover{box-shadow:var(--shadow)}
 
-  .page-wrap{max-width:var(--page-max);margin:12px auto;padding:0 14px}
-  .grid-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
-  .controls{color:var(--muted)}
+    .card-head{position:relative;padding-bottom:8px;margin-bottom:8px}
+    .card-title{font-weight:700;font-size:15px;letter-spacing:0.2px;text-align: center;color:white}
+    /* decorative pill/shape */
+    .card-head::before{content:"";position:absolute;right:-24px;top:-18px;width:110px;height:110px;border-radius:36px;opacity:.95;transform:rotate(18deg);z-index:-1}
 
-  .grid-wrapper{display:flex;justify-content:center;width:100%}
-  .cards-grid{
-    display:grid;
-    grid-template-columns: repeat(6, minmax(var(--card-min-width), var(--card-max-width)));
-    gap:18px;
-    justify-content:center;
-    width:100%;
-    max-width: calc(var(--card-max-width) * 6 + 18px * 5);
-  }
+    /* Two info boxes inside card */
+    .info-row{display:flex;gap:10px;flex:1;align-items:stretch}
+    .info{flex:1;border-radius:10px;padding:10px;background:linear-gradient(180deg,#fafafa,#ffffff);display:flex;flex-direction:column;justify-content:center;min-width:0}
+    .info .label{font-size:12px;color:var(--muted);font-weight:600}
+    .info .value{font-size:18px;font-weight:800}
 
-  .card{
-    background: linear-gradient(180deg,#ffffff,#e6f7f4);
-    border-radius:var(--radius);
-    border:2px solid var(--card-border);
-    padding:12px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    min-height:var(--card-height);
-    box-shadow:var(--shadow-lg);
-    transition: transform .12s ease, box-shadow .12s ease;
-  }
-  .card:hover{transform:translateY(-6px); box-shadow:0 18px 36px rgba(6,18,29,0.10)}
-  .card-heading{font-size:14px;font-weight:800;margin:4px 0 12px;text-transform:uppercase;color:#034c49;text-align:center}
+    /* Different accents for variety */
+    .a1 .card-head::before{background:var(--accent1)}
+    .a2 .card-head::before{background:var(--accent2)}
+    .a3 .card-head::before{background:var(--accent3)}
+    .a4 .card-head::before{background:linear-gradient(135deg,#8ef6b5,#5fd3a8)}
+    .a5 .card-head::before{background:linear-gradient(135deg,#ffd1e1,#ff8fb3)}
+    .a6 .card-head::before{background:linear-gradient(135deg,#b9f7ff,#9ad8ff)}
 
-  .tiles{
-    width:100%;
-    display:flex;
-    gap:10px;
-    align-items:stretch;
-    justify-content:center;
-    flex:1 1 auto;
-    padding:0 6px;
-  }
+    /* small screens: stack nicely */
+    @media (max-width:1200px){
+      .grid{grid-template-columns:repeat(4,1fr)}
+    }
+    @media (max-width:900px){
+      .grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width:640px){
+      .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+      .card{min-height:150px;padding:12px}
+      .brand h1{font-size:16px}
+    }
+    @media (max-width:420px){
+      .grid{grid-template-columns:repeat(1,1fr)}
+      .info-row{flex-direction:column}
+    }
 
-  .tile{
-    flex: 1 1 var(--tile-min-width);
-    border-radius:10px;
-    border:2px solid rgba(3,60,58,0.12);
-    background:linear-gradient(180deg,#ffffff,#e9fffb);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:12px;
-    text-decoration:none;
-    color:inherit;
-    transition: transform .10s ease, box-shadow .10s ease, border-color .10s ease;
-
-    height: var(--tile-fixed-height);
-    max-height: var(--tile-fixed-height);
-    overflow: hidden;
-  }
-
-  .tile:active{transform:scale(.99)}
-  .tile:hover{box-shadow:0 12px 28px rgba(6,18,29,.08);transform:translateY(-6px);border-color:var(--accent)}
-  .tile .label{font-size:13px;color:var(--muted);margin-bottom:6px}
-  .tile .value{font-weight:800;font-size:var(--tile-value-size);color:#034c49}
-  .tile .note{font-size:12px;color:var(--muted);margin-top:6px}
-
-  .tile.approved{border-left:8px solid var(--accent-2)}
-  .tile.current{border-left:8px solid var(--accent)}
-
-  /* responsive */
-  @media (max-width:1400px){
-    .cards-grid{grid-template-columns: repeat(5, minmax(180px, 1fr)); max-width: calc(180px * 5 + 18px * 4)}
-    :root { --card-height: 210px; --tile-value-size: 15px; --tile-min-width: 140px; }
-  }
-  @media (max-width:1200px){
-    .cards-grid{grid-template-columns: repeat(4, minmax(160px, 1fr)); max-width:900px}
-    :root { --card-height: 200px; --tile-value-size: 14px; --tile-min-width: 130px; }
-  }
-  @media (max-width:980px){
-    .cards-grid{grid-template-columns: repeat(3, minmax(140px, 1fr)); max-width:680px; gap:14px}
-    :root{ --card-height: 180px; --tile-value-size: 13px; --tile-min-width: 120px; }
-  }
-  @media (max-width:700px){
-    .cards-grid{grid-template-columns: repeat(2, minmax(120px, 1fr)); max-width:420px; gap:12px}
-    :root{ --card-height: 160px; --tile-value-size: 13px; --tile-min-width: 110px; }
-    .logo{width:40px;height:40px;font-size:14px}
-    .brand h1{font-size:14px}
-  }
-  @media (max-width:420px){
-    .cards-grid{grid-template-columns:repeat(1,1fr);max-width:360px;gap:10px}
-    .card{padding:10px;min-height:140px}
-    .tile{padding:10px}
-    :root{ --card-height: 140px; --tile-value-size: 12px; --tile-min-width: 100px; }
-  }
-
-  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;z-index:80}
-  .modal{width:min(560px,94%);background:white;border-radius:8px;padding:12px;box-shadow:var(--shadow-lg);border:1px solid rgba(15,23,42,0.04)}
-  .close{margin-left:auto;border:none;background:transparent;font-size:16px;cursor:pointer}
-  .muted{color:var(--muted)}
-  .footer{margin:12px 0 36px;color:var(--muted);font-size:12px;text-align:center}
-
-  input{padding:10px;border-radius:6px;border:1px solid rgba(6,18,29,0.06)}
-  a:focus, button:focus { outline: 3px solid rgba(15,118,110,0.12); outline-offset:3px; }
-</style>
-
+    /* small utility */
+    .muted{color:var(--muted);font-size:13px}
+  </style>
 </head>
 <body>
-
-  <!-- NAV -->
-  <header class="navbar" role="banner">
-    <div class="nav-inner">
-      <div class="brand" aria-hidden="false">
-        <div class="logo" aria-hidden="true">DM</div>
+  <div class="container">
+    <nav class="navbar">
+      <div class="brand">
+        <!-- Replace the src below with your logo path -->
+        <div class="logo"><img id="brand-logo" src="abhitech-logo.png" alt="MOD logo"></div>
         <div>
-          <h1>DAILY MOD - DASHBOARD</h1>
+          <h1>MOD-DASHBOARD</h1>
           <p class="muted"></p>
         </div>
       </div>
 
-      <div class="nav-actions">
-        <!-- <button class="btn ghost" id="helpBtn" aria-label="Help">Help</button> -->
-        <button class="btn" id="loginBtn" aria-haspopup="dialog">Login</button>
+      <div class="auth">
+        <div class="muted"></div>
+        <button class="btn-logout">Logout</button>
       </div>
-    </div>
-  </header>
+    </nav>
 
-  <div class="page-wrap">
-    <div class="grid-head">
-      <h2 style="margin:0;font-size:16px">12 Plants</h2>
-      <div class="controls muted"></div>
-    </div>
+    <main>
+      <section class="grid" aria-label="MOD cards grid">
 
-    <div class="grid-wrapper">
-      <section class="cards-grid" aria-label="Plants grid">
+        <!-- We'll generate 12 cards. Each card is an anchor that links to MOD-DASHBOARD.html -->
 
-        <article class="card" aria-label="BSL-3">
-          <div class="card-heading">BSL-3</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html" title="Open Approved MOD for BSL-3">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html" title="Open Current MOD for BSL-3">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 1 -->
+        <a class="card-link a1" href="MOD-DASHBOARD.html" aria-label="BSL-3 MOD details">
+          <article class="card">
+            <div class="card-head">
+              <div class="card-title">BSL-3</div>
+            </div>
+            <div class="info-row">
+              <div class="info">
+                <div class="label">Approved MOD</div>
+                <div class="value">₹ 2.3002 / kWh</div>
+              </div>
+              <div class="info">
+                <div class="label">Current MOD</div>
+                <div class="value">₹ 2.3002 / kWh</div>
+              </div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="CSTPS-3-7">
-          <div class="card-heading">CSTPS-3-7</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 2 -->
+        <a class="card-link a2" href="MOD-DASHBOARD.html" aria-label="CSTPS-3-7 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">CSTPS-3-7</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="KPKD-1-4">
-          <div class="card-heading">KPKD-1-4</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 3 -->
+        <a class="card-link a3" href="MOD-DASHBOARD.html" aria-label="KPKD-1-4 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">KPKD-1-4</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="KTPS-6,8">
-          <div class="card-heading">KTPS-6,8</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 4 -->
+        <a class="card-link a4" href="MOD-DASHBOARD.html" aria-label="KTPS-6,8 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">KTPS-6,8</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="NTPS-3-5">
-          <div class="card-heading">NTPS-3-5</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 5 -->
+        <a class="card-link a5" href="MOD-DASHBOARD.html" aria-label="NTPS-3-5 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">NTPS-3-5</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="PARALI_TPS_6-8">
-          <div class="card-heading">PARALI_TPS_6-8</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 6 -->
+        <a class="card-link a6" href="MOD-DASHBOARD.html" aria-label="PARALI_TPS_6-8 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">PARALI_TPS_6-8</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="BSL_4">
-          <div class="card-heading">BSL_4</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 7 -->
+        <a class="card-link a1" href="MOD-DASHBOARD.html" aria-label="BSL_4 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">BSL_4</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="CSTPS-8-9">
-          <div class="card-heading">CSTPS-8-9</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 8 -->
+        <a class="card-link a2" href="MOD-DASHBOARD.html" aria-label="CSTPS-8-9 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">CSTPS-8-9</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="KPKD-5">
-          <div class="card-heading">KPKD-5</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 9 -->
+        <a class="card-link a3" href="MOD-DASHBOARD.html" aria-label="KPKD-5 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">KPKD-5</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="KTPS-10">
-          <div class="card-heading">KTPS-10</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 10 -->
+        <a class="card-link a4" href="MOD-DASHBOARD.html" aria-label="KTPS-10 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">KTPS-10</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="PARAS-TPS-3-4">
-          <div class="card-heading">PARAS-TPS-3-4</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 11 -->
+        <a class="card-link a5" href="MOD-DASHBOARD.html" aria-label="PARAS-TPS-3-4 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">PARAS-TPS-3-4</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
-        <article class="card" aria-label="PARALI_TPS_8">
-          <div class="card-heading">PARALI_TPS_8</div>
-          <div class="tiles">
-            <a class="tile approved" href="MOD-DASHBOARD.html">
-              <div class="label">Approved MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-            <a class="tile current" href="MOD-DASHBOARD.html">
-              <div class="label">Current MOD</div>
-              <div class="value">₹ 2.3002 / kWh</div>
-              <div class="note">open dashboard</div>
-            </a>
-          </div>
-        </article>
+        <!-- Card 12 -->
+        <a class="card-link a6" href="MOD-DASHBOARD.html" aria-label="PARALI_TPS_8 MOD details">
+          <article class="card">
+            <div class="card-head"><div class="card-title">PARALI_TPS_8</div></div>
+            <div class="info-row">
+              <div class="info"><div class="label">Approved MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+              <div class="info"><div class="label">Current MOD</div><div class="value">₹ 2.3002 / kWh</div></div>
+            </div>
+          </article>
+        </a>
 
       </section>
-    </div>
-
-    <div class="footer"></div>
+    </main>
   </div>
-
-  <div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document" aria-labelledby="loginTitle">
-      <div style="display:flex;align-items:center;gap:10px">
-        <h3 id="loginTitle" style="margin:0;font-size:15px">Sign in</h3>
-        <button class="close" id="closeLogin" aria-label="Close">✕</button>
-      </div>
-      <hr style="border:none;border-top:1px solid rgba(6,18,29,0.04);margin:10px 0">
-      <form id="loginForm" onsubmit="return false">
-        <label style="display:block;margin-bottom:8px">
-          <div style="font-size:12px;color:var(--muted)">Username</div>
-          <input id="user" required style="width:100%;padding:10px;border-radius:6px;border:1px solid rgba(6,18,29,0.06);margin-top:8px">
-        </label>
-        <label style="display:block;margin-bottom:8px">
-          <div style="font-size:12px;color:var(--muted)">Password</div>
-          <input id="pass" type="password" required style="width:100%;padding:10px;border-radius:6px;border:1px solid rgba(6,18,29,0.06);margin-top:8px">
-        </label>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-          <button class="btn ghost" id="loginCancel" style="padding:7px 10px;font-size:13px">Cancel</button>
-          <button class="btn" id="loginSubmit" style="padding:7px 10px;font-size:13px">Sign in</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    (function(){
-      const loginModal = document.getElementById('loginModal');
-      document.getElementById('loginBtn').addEventListener('click', ()=>{
-        loginModal.style.display = 'flex';
-        loginModal.setAttribute('aria-hidden','false');
-      });
-      document.getElementById('closeLogin').addEventListener('click', ()=>{ loginModal.style.display='none'; loginModal.setAttribute('aria-hidden','true') });
-      document.getElementById('loginCancel').addEventListener('click', (e)=>{ e.preventDefault(); loginModal.style.display='none'; loginModal.setAttribute('aria-hidden','true') });
-      document.getElementById('loginSubmit').addEventListener('click', (e)=>{ e.preventDefault(); loginModal.style.display='none'; loginModal.setAttribute('aria-hidden','true'); alert('Logged in (demo)'); });
-      window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ if(loginModal.style.display === 'flex'){ loginModal.style.display='none'; loginModal.setAttribute('aria-hidden','true') } } });
-      loginModal.style.display = 'none';
-      document.getElementById('helpBtn').addEventListener('click', ()=> alert('Click any tile to open the detailed dashboard for that plant.'));
-    })();
-  </script>
 </body>
 </html>
